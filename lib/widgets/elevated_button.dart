@@ -1,4 +1,4 @@
-import 'package:calories/models/custom_text.dart';
+import 'package:calories/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
 
 ElevatedButton elevatedButton (String data,Color color, Function()  action,double value){
@@ -25,6 +25,6 @@ ElevatedButton elevatedButton (String data,Color color, Function()  action,doubl
           )
       ),
       onPressed: action ,
-      child: CustomText(data, color: Colors.white,),
+      child: customText(data, color: Colors.white,),
   );
 }
