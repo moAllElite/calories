@@ -41,6 +41,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
-    return const CaloriesPage();
+    return GestureDetector(
+      onTap: (()=> FocusScope.of(context).requestFocus(FocusNode())),
+      child: const CaloriesPage(),
+    );
   }
 }

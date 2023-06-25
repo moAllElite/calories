@@ -1,8 +1,8 @@
-import 'dart:async';
-
+import 'package:calories/widgets/elevated_button.dart';
+import 'package:calories/widgets/snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:calories/models/custom_text.dart';
-import 'package:calories/models/sport_level.dart';
+import '../models/custom_text.dart';
+import '../models/sport_level.dart';
 class CaloriesPage extends StatefulWidget{
   const CaloriesPage({super.key});
   @override
@@ -10,69 +10,41 @@ class CaloriesPage extends StatefulWidget{
 
 }
 class _CaloriesPage extends State<CaloriesPage>{
-  SportLevel _level=SportLevel.Modere;
-  bool interrupteur=true;
+  /*
+   * variables
+   */
+  late double age=0;
+  bool genre=true;
   bool active=false;
-
   double height=100.0;
+  late double weight=0;
+  int calorieBase=0;
+  int calorieActivite=0;
+  SportLevel _level=SportLevel.modere;
+
   @override
   Widget build(BuildContext context) {
-    Color myColor = (interrupteur) ? Colors.pink : Colors.blue;
+
     return Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: (interrupteur) ?
+          backgroundColor: (genre) ?
           Theme
               .of(context)
               .colorScheme
               .inversePrimary : Colors.blue,
           title: CustomText("Calories ", color: Colors.white, fontSize: 30.0),
         ),
-        body: SizedBox(
-          height: MediaQuery
-              .of(context)
-              .size
-              .height * 1.1,
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
+        body: SingleChildScrollView(
+          padding:const EdgeInsets.all(15.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(3),
-                child: CustomText(
-                  "Remplissez tous les champs pour obtenir votre besoin journalier en calories",
-                  fontSize: 15.0,
-                ),
+              padding(),
+              CustomText(
+                "Remplissez tous les champs pour obtenir votre besoin journalier en calories",
+                fontSize: 15.0,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  CustomText(
-                      "Femme",
-                      color: Colors.pink
-                  ),
-                  Switch(
-                    thumbColor: const MaterialStatePropertyAll(
-                        Colors.white
-                    ),
-                    value: interrupteur,
-                    activeColor: Colors.blue,
-                    inactiveTrackColor: Colors.pink,
-                    onChanged: (bool value) =>
-                        setState(() {
-                          interrupteur = value;
-                        }),
-                  ),
-                  CustomText(
-                    "Homme",
-                    color: Colors.blue,
-                  ),
-                ],
-              ),
+              padding(),
               SizedBox(
                 width: MediaQuery
                     .of(context)
@@ -82,7 +54,7 @@ class _CaloriesPage extends State<CaloriesPage>{
                     .of(context)
                     .size
                     .height / 1.7,
-                child: Card(
+                child:   Card(
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5))
                   ),
@@ -90,95 +62,97 @@ class _CaloriesPage extends State<CaloriesPage>{
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          showYear();
-                        },
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStatePropertyAll(
-                                (interrupteur == true) ? Colors.pink : Colors
-                                    .blue
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CustomText(
+                              "Femme",
+                              color: Colors.pink
+                          ),
+                          Switch(
+                            thumbColor: const MaterialStatePropertyAll(
+                                Colors.white
                             ),
-                            overlayColor: const MaterialStatePropertyAll(
-                                Colors.transparent
-                            ),
-                            shape: const MaterialStatePropertyAll(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(3))
-                              ),
-                            ),
-                            splashFactory: InkRipple.splashFactory,
-                            foregroundColor: const MaterialStatePropertyAll(
-                                Colors.cyan
-                            )
-                        ),
-                        child: CustomText(
-                          "Appuyez pour entrer votre âge",
-                          color: Colors.white,
-                        ),
+                            value: genre,
+                            activeColor: Colors.blue,
+                            inactiveTrackColor: Colors.pink,
+                            onChanged: (bool value) =>
+                                setState(() {
+                                  genre = value;
+                                }),
+                          ),
+                          CustomText(
+                            "Homme",
+                            color: Colors.blue,
+                          ),
+                        ],
                       ),
-                      CustomText(
-                        "Votre taille est de\t: ${height.toInt()} ",
-                        color: myColor,
+                      elevatedButton(
+                          (age==0 )?
+                          "Appuyez pour entrer votre âge":"Votre âge est de : ${age.toInt()} ans",
+                          setColor(), (){showYear();}, 0
+                      ),
+                      CustomText("Votre taille est de\t: ${height.toInt()} cm",
+                        color: setColor(),
                       ),
                       Slider(
-                          activeColor: (interrupteur) ? Colors.pink : Colors
-                              .blue,
+                          activeColor: setColor(),
                           inactiveColor: Colors.grey[400],
                           value: height,
                           min: 100,
-                          max: 200,
+                          max: 215,
                           onChanged: (value) {
                             setState(() {
                               height = value;
                             });
                           }
                       ),
-                      TextField(
-                        decoration: const InputDecoration(
-                          labelText: "Entrer votre poids en kilo",
-                          labelStyle: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black
+                      Container(
+                        margin: const EdgeInsets.only(top: 5,bottom: 15),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            labelText: "Entrer votre poids en kg",
+                            labelStyle: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black
+                            ),
                           ),
+                          onChanged: (String value) {
+                            setState(() {
+                              weight=double.tryParse(value)!;
+                            });
+                          },
+                          keyboardType: TextInputType.number,
                         ),
-                        onSubmitted: (value) {
-                          setState(() {
-                            weight=value ;
-                          });
-                          showWeight();
-                        },
-                        keyboardType: TextInputType.number,
                       ),
                       CustomText(
                         "Quelle est votre activité sportive ?",
-                        color: myColor,
+                        color: setColor(),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
                               children: <Widget>[
-                                Radio<SportLevel>(
-                                  activeColor: myColor,
-                                  value: SportLevel.Faible,
-                                  groupValue: _level,
-                                  onChanged: (SportLevel ?value) {
-                                    setState(() {
-                                      _level = value!;
-                                    });
-                                  },
+                                Radio(
+                                    activeColor: setColor(),
+                                    value: SportLevel.faible,
+                                    groupValue: _level,
+                                    onChanged: (SportLevel ? value) {
+                                      setState(() {
+                                        _level = value!;
+                                      });
+                                    }
                                 ),
-                                CustomText("Faible", color: myColor,
-                                  textAlign: TextAlign.left,)
+                                CustomText("Faible", color: setColor() , textAlign: TextAlign.left,)
                               ]
                           ),
                           Column(
                             children: <Widget>[
                               Radio<SportLevel>(
-                                activeColor: myColor,
-                                value: SportLevel.Modere,
+                                activeColor: setColor(),
+                                value: SportLevel.modere,
                                 groupValue: _level,
                                 onChanged: (SportLevel ? value) {
                                   setState(() {
@@ -186,15 +160,14 @@ class _CaloriesPage extends State<CaloriesPage>{
                                   });
                                 },
                               ),
-                              CustomText("Moderé", color: myColor,
-                                textAlign: TextAlign.left,)
+                              CustomText("Moderé", color: setColor(), textAlign: TextAlign.left,)
                             ],
                           ),
                           Column(
                             children: <Widget>[
                               Radio<SportLevel>(
-                                activeColor: myColor,
-                                value: SportLevel.Forte,
+                                activeColor:setColor(),
+                                value: SportLevel.forte,
                                 groupValue: _level,
                                 onChanged: (SportLevel ? value) {
                                   setState(() {
@@ -202,96 +175,112 @@ class _CaloriesPage extends State<CaloriesPage>{
                                   });
                                 },
                               ),
-                              CustomText("Forte", color: myColor,
-                                textAlign: TextAlign.left,)
+                              CustomText("Forte", color: setColor() , textAlign: TextAlign.left,)
                             ],
                           ),
                         ],
-                      ),
+                      )
                     ],
                   ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.only(top: 15),
-                child: ElevatedButton(
-                    onPressed: () {
-
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll(
-                          (interrupteur) ? Colors.pink : Colors.blue
-                      ),
-                      elevation: const MaterialStatePropertyAll(
-                          5.0
-                      ),
-                    ),
-                    child: CustomText(
-                      "Calculer", color: Colors.white, fontSize: 17.0,)),
-              )
+              padding(),
+              elevatedButton(
+                  "Calculer",
+                  setColor(),
+                    calculerNombreDeCalories,
+               5.0),
             ],
           ),
         )
     );
   }
-  late String  weight;
-  Future showWeight() async{
-    return showDialog(
-        context: context,
-        builder:(context) {
-          return AlertDialog(
-            title: CustomText("Votre poids est de :\t $weight kilos"),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(5))
-            ),
-            actions: [
-              TextButton(onPressed: (){
-                Navigator.pop(context);
-              },
-                  child:CustomText("Ok",color: Colors.blue[800],)
-              ),
-            ],
-          ) ;
-        },
-    );
+    Color setColor()  {
+    if (genre) {
+    return   Colors.pink ;
+    }{
+     return  Colors.blue;
+    }
   }
-  late String age;
-  Future calculAge() async{
-    return showDialog(
+
+
+  Future  showYear() async {
+    final  choix = await showDatePicker(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: CustomText(
-            "votre age est de :\t ${
-                 DateTime.now().year.toInt() - birthday.year.toInt()
-            }",
-          ),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5)
-          ),
-          actions: [
-              TextButton(
-                onPressed: ()=>Navigator.pop(context),
-                child:CustomText("OK",color: Colors.blue[800],)
-            )
-          ],
-        );
-      },
+      initialDatePickerMode: DatePickerMode.year,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
     );
+    if (choix != null) {
+      var difference = DateTime
+          .now()
+          .difference(choix);
+
+      var day=difference.inDays;
+      var years=(day/365);
+
+      setState(() {
+        age=years;
+      });
+    }
+    return choix;
   }
-  DateTime birthday=DateTime(2000);
-  Future<DateTime?> showYear() async {
-    return showDatePicker(
-        context: context,
-        initialDatePickerMode: DatePickerMode.year,
-        initialDate: DateTime(2000),
-        firstDate: DateTime(1950),
-        lastDate: DateTime(2022),
-        onDatePickerModeChange: (value) {
-          setState(() {
-            birthday=value as DateTime;
-          });
-        },
-    ).whenComplete(() => calculAge());
+  Padding padding (){
+    return const Padding(padding: EdgeInsets.only(top: 20));
   }
+  void  calculerNombreDeCalories() async {
+    if(age.toInt() != 0  && weight != 0 ){
+        if(genre){
+          calorieBase=(66.4730 + (13.7516 * weight) + (5.0033 * height) -(6.755 * age)).toInt();
+        }else{
+          calorieBase=(66.0955 + (9.5634 * weight) + (1.8496 * height) -(4.6756 * age)).toInt();
+        }
+        switch(_level.index){
+          case 0:
+            calorieActivite = (calorieBase * 1.2).toInt();break;
+          case 1:
+            calorieActivite = (calorieBase * 1.5).toInt();break;
+          case 2:
+            calorieActivite = (calorieBase * 1.8).toInt();break;
+          default:
+            calorieActivite = calorieBase; break;
+        }
+        setState(() {
+          _showMyDialog();
+        });
+    }else{
+       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+  }
+  Future<void> _showMyDialog() async{
+    return showDialog<void>(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext buildContext){
+      return SimpleDialog(
+        title:CustomText('Votre besoin en calories ',color: setColor(),) ,
+        contentPadding: const EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(2)
+        ),
+        children:<Widget> [
+          padding(),
+          CustomText("Votre besoin en calories est de :\t $calorieBase ",fontWeight: FontWeight.w600),
+          padding(),
+          CustomText("Votre besoin avec activité sportive est de :\t $calorieActivite "),
+          elevatedButton(
+              "ok".toUpperCase(),
+              setColor(),
+              (){
+                Navigator.of(buildContext).pop();
+              },
+            10
+          )
+        ],
+      );
+  });
+  }
+
+
 }

@@ -1,5 +1,5 @@
 enum SportLevel{
-  Faible,
-  Modere,
-  Forte
+  faible,
+  modere,
+  forte
 }
