@@ -120,7 +120,8 @@ class _CaloriesPage extends State<CaloriesPage>{
                           ),
                           onChanged: (String value) {
                             setState(() {
-                              weight=double.tryParse(value)!;
+                                weight=double.tryParse(value)!;
+
                             });
                           },
                           keyboardType: TextInputType.number,
@@ -230,7 +231,7 @@ class _CaloriesPage extends State<CaloriesPage>{
     return const Padding(padding: EdgeInsets.only(top: 20));
   }
   void  calculerNombreDeCalories() async {
-    if(age.toInt() != 0  && weight != 0 ){
+    if(age.toInt() != 0  && weight != 0  ){
         if(genre){
           calorieBase=(66.4730 + (13.7516 * weight) + (5.0033 * height) -(6.755 * age)).toInt();
         }else{
@@ -259,16 +260,16 @@ class _CaloriesPage extends State<CaloriesPage>{
     barrierDismissible: false,
     builder: (BuildContext buildContext){
       return SimpleDialog(
-        title:CustomText('Votre besoin en calories ',color: setColor(),) ,
+        title:CustomText('Votre besoin en calories ',color: setColor(),fontWeight: FontWeight.w600) ,
         contentPadding: const EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(2)
         ),
         children:<Widget> [
           padding(),
-          CustomText("Votre besoin en calories est de :\t $calorieBase ",fontWeight: FontWeight.w600),
+          CustomText("Votre besoin en calories est de : $calorieBase "),
           padding(),
-          CustomText("Votre besoin avec activité sportive est de :\t $calorieActivite "),
+          CustomText("Votre besoin avec activité sportive est de : $calorieActivite "),
           elevatedButton(
               "ok".toUpperCase(),
               setColor(),
