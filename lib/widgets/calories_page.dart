@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 
 class CaloriesPage extends StatefulWidget{
-  const CaloriesPage({super.key});
+  const CaloriesPage({Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState()=>_CaloriesPage();
 
@@ -24,7 +24,21 @@ class _CaloriesPage extends State<CaloriesPage>{
   int calorieBase=0;
   int calorieActivite=0;
   SportLevel _level=SportLevel.modere;
-
+  final fieldText = TextEditingController();
+  //clear the weight field
+  void clearText() {
+    fieldText.clear();
+  }
+  //reset slider
+  void _reset(){
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+            transitionDuration: Duration.zero,
+            pageBuilder: (_, __, ___) => const CaloriesPage(),
+      )
+    );
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -103,6 +117,7 @@ class _CaloriesPage extends State<CaloriesPage>{
           value: height,
           min: 100,
           max: 215,
+
           onChanged: (value) {
             setState(() {
               height = value;
@@ -178,9 +193,9 @@ class _CaloriesPage extends State<CaloriesPage>{
                       onChanged: (String value) {
                         setState(() {
                           weight=double.tryParse(value)!;
-
                         });
                       },
+                      controller: fieldText,
                       keyboardType: TextInputType.number,
                     ),
                   ),
@@ -297,6 +312,8 @@ class _CaloriesPage extends State<CaloriesPage>{
         }
         setState(() {
           _showMyDialog();
+          age=0;
+          clearText;
         });
     }else{
        ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -323,8 +340,11 @@ class _CaloriesPage extends State<CaloriesPage>{
               setColor(),
               (){
                 Navigator.of(buildContext).pop();
+               _reset();
+                age = 0;
+                clearText();
               },
-            10
+            10,
           )
         ],
       );
