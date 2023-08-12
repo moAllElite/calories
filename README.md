@@ -1,6 +1,8 @@
 # calories
 
 this is calcul calories application
+Cette application permet le calcul des besoins énergitiques en calories durant 
+la journée en fonction de votre poids , votre âge ,votre taille et sexe
 
 ## Getting Started
 
