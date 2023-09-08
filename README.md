@@ -1,18 +1,12 @@
 # calories
 
-this is calcul calories application
+this is calcul calories application .This app will help you to calculate the calories you need
+during the one day .In fact,It's base on your gender , height, weight,
+age following your sport's level activities.
 Cette application permet le calcul des besoins énergitiques en calories durant 
-la journée en fonction de votre poids , votre âge ,votre taille et sexe
+la journée en fonction de votre poids , votre âge ,votre taille et sexe suivant votre
+rythme d'activités sportives (faible,modéré et forte) 
 
-## Getting Started
+## Interfaces 
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
